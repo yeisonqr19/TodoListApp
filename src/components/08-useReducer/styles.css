@@ -1,0 +1,25 @@
+body {
+  padding: 50px;
+}
+
+p {
+  cursor: pointer;
+  margin: 0;
+  transition: all 0.35s ease-in-out;
+}
+
+p:hover {
+  transform: scale(1.1);
+}
+
+.list-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  align-content: center;
+}
+
+.complete {
+  text-decoration: line-through;
+}
