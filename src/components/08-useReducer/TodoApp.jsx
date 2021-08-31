@@ -1,9 +1,8 @@
-import React, { useEffect, useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { todoReducer } from "./todoReducer";
-import { useForm } from "../../hooks/useForm";
-import "./styles.css";
 import { TodoList } from "./components/TodoList";
+import { TodoAdd } from "./components/TodoAdd";
+import "./styles.css";
 
 const init = () => {
   return JSON.parse(localStorage.getItem("todos")) || [];
@@ -17,50 +16,39 @@ export const TodoApp = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const { formValues, handleInputChange, reset } = useForm({
-    description: "",
-  });
+  const handleDelete = useCallback(
+    (todoId) => {
+      const action = {
+        type: "delete",
+        payload: todoId,
+      };
 
-  const { description } = formValues;
+      dispatch(action);
+    },
+    [dispatch]
+  );
 
-  const handleDelete = (todoId) => {
-    const action = {
-      type: "delete",
-      payload: todoId,
-    };
+  const handleToogle = useCallback(
+    (todoId) => {
+      const action = {
+        type: "toogle",
+        payload: todoId,
+      };
 
-    dispatch(action);
-  };
+      dispatch(action);
+    },
+    [dispatch]
+  );
 
-  const handleToogle = (todoId) => {
-    const action = {
-      type: "toogle",
-      payload: todoId,
-    };
-
-    dispatch(action);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (description.trim().length <= 1) {
-      return;
-    }
-    const newTodo = {
-      id: uuidv4(),
-      desc: description,
-      done: false,
-    };
-
-    const action = {
-      type: "add",
-      payload: newTodo,
-    };
-
-    dispatch(action);
-    reset();
-  };
+  const handleAddTodo = useCallback(
+    (newTodo) => {
+      dispatch({
+        type: "add",
+        payload: newTodo,
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <div>
@@ -79,26 +67,7 @@ export const TodoApp = () => {
         </div>
 
         <div className="col-5">
-          <h4>Agregar TODO</h4>
-          <hr />
-
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="description"
-              placeholder="Aprender ..."
-              autoComplete="off"
-              className="form-control"
-              onChange={handleInputChange}
-              value={description}
-            />
-
-            <div className="d-grid gap-2">
-              <button className="btn btn-outline-primary mt-1" type="submit">
-                Agregar
-              </button>
-            </div>
-          </form>
+          <TodoAdd handleAddTodo={handleAddTodo} />
         </div>
       </div>
     </div>

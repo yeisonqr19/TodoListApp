@@ -1,25 +1,25 @@
 import React from "react";
 
-export const TodoListItem = ({
-  handleToogle,
-  handleDelete,
-  index,
-  desc,
-  id,
-  done,
-}) => {
-  return (
-    <li className="list-group-item">
-      <p
-        onClick={() => handleToogle(id)}
-        className={`text-center ${done && "complete"}`}
-      >
-        {index + 1}. {desc}
-      </p>
+export const TodoListItem = React.memo(
+  ({ handleToogle, handleDelete, index, todo }) => {
+    console.log("Me estoy EJecutando ahora");
 
-      <button className="btn btn-danger" onClick={() => handleDelete(id)}>
-        Borrar
-      </button>
-    </li>
-  );
-};
+    return (
+      <li className="list-group-item">
+        <p
+          onClick={() => handleToogle(todo.id)}
+          className={`text-center ${todo.done && "complete"}`}
+        >
+          {index + 1}. {todo.desc}
+        </p>
+
+        <button
+          className="btn btn-danger"
+          onClick={() => handleDelete(todo.id)}
+        >
+          Borrar
+        </button>
+      </li>
+    );
+  }
+);
